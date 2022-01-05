@@ -1,0 +1,7 @@
+3
+á³\f  ã               @   sd   d dl mZ d dlmZ d dlmZmZ edejƒ ddedejdd	d
+dedejƒ ddgZdS )é    )Úpath)ÚRegistrarUsuarioView)Ú	LoginViewÚ
+LogoutViewz
+registrar/Z	registrar)Únamezlogin/z
+login.html)Útemplate_nameÚloginzlogout/ÚlogoutN)	Údjango.urlsr   Zusuarios.viewsr   Údjango.contrib.auth.viewsr   r   Úas_viewÚurlpatterns© r   r   úL/home/tsi/Documentos/experiencein_prof_version/experiencein/usuarios/urls.pyÚ<module>   s
+   
