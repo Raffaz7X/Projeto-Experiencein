@@ -1,7 +1,7 @@
 
 <h1>--Experiencein--</h1>
 
-Status: Projeto Funcionando, link: http://raffaz7.pythonanywhere.com/login/?next=/
+Status: Projeto Finalizado link: http://raffaz7.pythonanywhere.com/login/?next=/
 
 ## Sobre o projeto: 
 - Projeto desenvolvido na disciplina Programação para Internet 2, utilizando framework Django.
