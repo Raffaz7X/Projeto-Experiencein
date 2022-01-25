@@ -3,6 +3,89 @@ from perfis.models import Perfil, Convite
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 
+from rest_framework import viewsets,response, status, exceptions
+from rest_framework.decorators import api_view, renderer_classes
+from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
+from rest_framework.permissions import AllowAny
+
+
+class PerfilView(viewsets.ModelViewSet):
+	queryset = Perfil.objects.all()
+	serializer_class = None
+
+	def get_serializer_class(self):
+		if self.request.method == 'GET':
+			return None
+		return super().get_serializer_class()
+
+	def get_permissions(self):
+		if self.request.method == 'POST':
+			return (AllowAny(),)
+
+		return super().get_permissions()
+
+
+@api_view(['GET'])
+@renderer_classes((JSONRenderer, BrowsableAPIRenderer))
+
+def get_convites(request, *args, **kwargs):
+	perfil_logado = get_perfil_logado(request)
+	convites = Convite.objects.filter(convidado=perfil_logado)
+	serializer = None
+	return response.Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@renderer_classes((JSONRenderer, BrowsableAPIRenderer))
+
+def convidar(request, *args, **kwargs):
+	try:
+		perfil_a_convidar = Perfil.objects.get(id=kwargs['perfil_id'])
+	except:
+		raise exceptions.NotFound('NAO FOI ENCONTRADO')
+	
+	perfil_logado = get_perfil_logado(request)
+	if perfil_a_convidar != perfil_logado:
+			perfil_logado.convidar(perfil_a_convidar)
+			return response.Response({'mensagem': f'convite enviado com sucesso {perfil_a_convidar.email}.'}, status=status.HTTP_201_CREATED)
+	raise exceptions.ParseError('Eita voce Nao pode convida o perfil')
+
+@api_view(['POST'])
+@renderer_classes((JSONRenderer, BrowsableAPIRenderer))
+
+def aceitar(request, *args, **kwargs):
+	perfil_logado = get_perfil_logado(request)
+	try:
+		convite = Convite.objects.filter(convidado=perfil_logado).get(id=kwargs['convite_id'])
+	except:
+		raise exceptions.NotFound('Nao funciono ')
+	convite.aceitar()
+	return response.Response({'mensagem': 'Convite aceito com sucesso'}, status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET'])
+@renderer_classes((JSONRenderer, BrowsableAPIRenderer))
+def get_meu_perfil_logado(request, *args, **kwargs ):
+	perfil_logado = get_perfil_logado(request)
+	serializer = None
+	return response.Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @login_required
 def index(request):
 	return render(request, 'index.html', {'perfis': Perfil.objects.all(), 'perfil_logado': get_perfil_logado(request)})
@@ -29,6 +112,7 @@ def aceitar(request, convite_id):
 	convite.aceitar()
 	return redirect('index')
 
-@login_required
+
+
 def get_perfil_logado(request):
 	return request.user.perfil
