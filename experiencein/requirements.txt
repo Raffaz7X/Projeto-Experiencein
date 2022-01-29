@@ -1,0 +1,14 @@
+distlib==0.3.4
+Django==2.2
+django-cors-headers==3.11.0
+django-rest-framework==0.1.0
+djangorestframework==3.13.1
+filelock==3.4.2
+importlib-metadata==4.10.1
+platformdirs==2.4.1
+pytz==2021.3
+six==1.16.0
+sqlparse==0.4.2
+typing-extensions==4.0.1
+virtualenv==20.13.0
+zipp==3.7.0
