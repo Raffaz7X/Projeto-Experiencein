@@ -9,22 +9,23 @@ class ContatoSerializer(serializers.ModelSerializer):
         fields = ('id', 'nome', 'email')
 
 class PerfilSerializer(serializers.ModelSerializer):
-    senha = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
+    senha = serializers.CharField(write_only=True, required=True, style={'input_type':'password'})
     email = serializers.EmailField()
     contatos = ContatoSerializer(required=False, many=True)
+
     class Meta:
-        model= Perfil
+        model = Perfil
         fields = ('id', 'nome', 'email', 'nome_empresa', 'senha', 'contatos')
         read_only_fields = ('id',)
 
-    def create(Self, validated_data):
+    def create(self, validated_data):
         try:
             usuario = User(username=validated_data['nome'], email=validated_data['email'])
             usuario.set_password(validated_data['senha'])
             usuario.save()
-        except: 
-            raise exceptions.ParseError('Erro ja tem uma conta com esse nome ', code=status.HTTP_400_BAD_REQUEST)
-        
+        except:
+            raise exceptions.ParseError('Já existe um usuário cadastrado com esse nome', code=status.HTTP_400_BAD_REQUEST)
+
         Token.objects.create(user=usuario)
         validated_data['usuario'] = usuario
 
@@ -35,9 +36,11 @@ class PerfilSerializer(serializers.ModelSerializer):
 
 class PerfilSimplificadoSerializer(serializers.ModelSerializer):
     pode_convidar = serializers.SerializerMethodField()
+
     class Meta:
         model = Perfil
         fields = ('id', 'nome', 'email', 'pode_convidar')
+        read_only_fields = ('id',)
 
     def get_pode_convidar(self, obj):
         user = self.context['request'].user
