@@ -22,11 +22,11 @@ export default function Login() {
   return( <div className="form">
     <form>
       <label>
-        Username
+        Usuário
           <input type="text" onChange={(e) => setUsername(e.target.value)} />
       </label>
       <label>
-        Password
+        Senha
         <input type="password" onChange={(e) => setPassword(e.target.value)}/>
       </label>
       <button type="submit" onClick={submit}> Login </button>
