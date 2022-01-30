@@ -19,9 +19,9 @@ export default function Login() {
     .catch((error) => console.log(error));
   }
 
-  return( <div className="form">
+  return( <div className="form" >
     <form>
-      <label>
+      <label >
         Usuário
           <input type="text" onChange={(e) => setUsername(e.target.value)} />
       </label>
